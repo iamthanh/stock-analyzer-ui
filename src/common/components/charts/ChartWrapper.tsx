@@ -4,20 +4,24 @@ import Box from "@mui/material/Box";
 import UseGetSymbolData from "../../../services/api/symbol/useGetSymbolData";
 import { Alert } from "@mui/material";
 import CandlestickChart from "./CandlestickChart";
+import { ExplorerToolsEnum } from "../../../types/explorer.types";
+import { SymbolDailyDataType, SymbolResponseDataType } from "../../../types/symbolData.types";
 
 type ChartWrapperProps = {
   symbol: string;
   dataType: string;
   options: { [key: string]: any };
+  toolsEnabled: { [key in ExplorerToolsEnum]: boolean };
 };
 
 export const ChartWrapper = (props: ChartWrapperProps) => {
-  const { symbol, dataType, options = {} } = props;
+  const { symbol, dataType, options = {}, toolsEnabled } = props;
 
-  const { SymbolDataIsPending, SymbolDataHasError, SymbolDataResponse } = UseGetSymbolData({ symbol, dataType, options });
-
-  const [symbolData, setSymbolData] = useState<any>(null);
+  const [symbolData, setSymbolData] = useState<{ [key: string]: SymbolDailyDataType } | null>(null);
+  const [symbolToolsData, setSymbolToolsData] = useState<{ [key: string]: any } | null>(null);
   const [dateKeys, setDateKeys] = useState<Array<string>>([]);
+
+  const { SymbolDataIsPending, SymbolDataHasError, SymbolDataResponse } = UseGetSymbolData({ symbol, dataType, options, toolsEnabled });
 
   useEffect(() => {
     if (!SymbolDataIsPending) {
@@ -25,6 +29,7 @@ export const ChartWrapper = (props: ChartWrapperProps) => {
         if (SymbolDataResponse.status === "success" && SymbolDataResponse.data) {
           setSymbolData(SymbolDataResponse.data);
           setDateKeys(Object.keys(SymbolDataResponse.data));
+          setSymbolToolsData(SymbolDataResponse.toolsData);
         }
       }
     }
@@ -46,5 +51,7 @@ export const ChartWrapper = (props: ChartWrapperProps) => {
     );
   }
 
-  return <CandlestickChart symbol={symbol} symbolData={symbolData} dateKeys={dateKeys} />;
+  if (symbolData) {
+    return <CandlestickChart symbol={symbol} symbolData={symbolData} dateKeys={dateKeys} symbolToolsData={symbolToolsData} />;
+  }
 };

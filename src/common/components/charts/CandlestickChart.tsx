@@ -1,33 +1,30 @@
-import { FC, useEffect, useState } from "react";
+import { FC } from "react";
 import ReactECharts from "echarts-for-react";
 import { SymbolDailyDataType } from "../../../types/symbolData.types";
+import { TrendDetectionDataType } from "../../../types/trendDetection.types";
 
 type CandlestickChartProps = {
   symbol: string;
   dateKeys: Array<string>;
   symbolData: { [key: string]: SymbolDailyDataType };
+  symbolToolsData: { [key: string]: any } | null;
 };
 
-type CandlestickChartDataType = {
-  value: Array<number | string>;
-};
+type CandlestickChartDataType = Array<number | string>;
 
-const CandlestickChart: FC<CandlestickChartProps> = ({ symbol, dateKeys, symbolData }) => {
+const CandlestickChart: FC<CandlestickChartProps> = ({ symbol, dateKeys, symbolData, symbolToolsData }) => {
   let chartData;
+  let highlightMarkAreas: Array<Array<{ xAxis: string }>> = [];
+
+  const transformTrendDetectionIntoChartMarkAreas = (trendData: TrendDetectionDataType[]) => {
+    return trendData.map((trend: TrendDetectionDataType) => [{ xAxis: trend.startDate }, { xAxis: trend.endDate }]);
+  };
 
   const transformDataForChart = (): CandlestickChartDataType[] | undefined => {
     try {
       // Make sure that the dateKeys are sorted, oldest first
       const dates = dateKeys.sort((a, b) => a.localeCompare(b, "en", { ignorePunctuation: true }));
-      return dates.map((date: string) => ({
-        value: [symbolData[date].open, symbolData[date].close, symbolData[date].low, symbolData[date].high, symbolData[date].volume],
-        // itemStyle: {
-        //   color: "transparent", // Hollow candle (upward movement)
-        //   color0: "#ec0000", // Solid candle (downward movement)
-        //   borderColor: "#00da3c", // Border for hollow candles (upward movement)
-        //   borderColor0: "#ec0000", // Border for solid candles (downward movement)
-        // },
-      }));
+      return dates.map((date: string) => [symbolData[date].open, symbolData[date].close, symbolData[date].low, symbolData[date].high, symbolData[date].volume]);
     } catch (err) {
       console.log(err);
       console.error("there was an error trying to transform data");
@@ -39,13 +36,22 @@ const CandlestickChart: FC<CandlestickChartProps> = ({ symbol, dateKeys, symbolD
     if (transformedData) {
       chartData = transformedData;
     }
+
+    if (symbolToolsData) {
+      // Handle highlighting of sections for trend detection
+      if ("trendDetection" in symbolToolsData && (symbolToolsData.trendDetection || []).length > 0) {
+        const transformedTrendAreas = transformTrendDetectionIntoChartMarkAreas(symbolToolsData.trendDetection);
+        if (transformedTrendAreas && transformedTrendAreas.length > 0) {
+          highlightMarkAreas = transformedTrendAreas;
+        }
+      }
+    }
   }
 
   return (
     <ReactECharts
-      style={{ height: "800px", width: "1000px" }}
+      style={{ height: "100vh" }}
       option={{
-        backgroundColor: "white", // Remove background color
         tooltip: {
           trigger: "axis",
           axisPointer: {
@@ -53,6 +59,7 @@ const CandlestickChart: FC<CandlestickChartProps> = ({ symbol, dateKeys, symbolD
           },
         },
         legend: {
+          show: false,
           data: [symbol],
         },
         grid: {
@@ -98,10 +105,16 @@ const CandlestickChart: FC<CandlestickChartProps> = ({ symbol, dateKeys, symbolD
             type: "candlestick",
             data: chartData,
             itemStyle: {
-              color: "green",
-              color0: "red",
+              color: "#0ead69",
+              color0: "#ee4266",
               borderColor: null,
               borderColor0: null,
+            },
+            markArea: {
+              itemStyle: {
+                color: "rgba(136,231,136,0.3)",
+              },
+              data: highlightMarkAreas,
             },
           },
         ],
