@@ -1,38 +1,31 @@
-import { useQuery } from "@tanstack/react-query"
-import { ExplorerToolsEnum } from "../../../types/explorer.types"
-import queryString from 'query-string';
+import { useQuery } from "@tanstack/react-query";
+import queryString from "query-string";
 
-type UseGetSymbolDataProps ={
-  symbol: string
-  dataType: string
-  options: {[key: string]: any}
-  toolsEnabled: { [key in ExplorerToolsEnum]: boolean }
-}
+type UseGetSymbolDataProps = {
+  symbol: string;
+  dataType: string;
+  options: { [key: string]: any };
+};
 
-const UseGetSymbolData= ({ symbol, dataType, options = {}, toolsEnabled }: UseGetSymbolDataProps) => {
+const UseGetSymbolData = ({ symbol, dataType, options = {} }: UseGetSymbolDataProps) => {
   const queryToSet = {
-    ...toolsEnabled,
     ...options,
     ...{
-      limit: 250
-    }
-  }
+      limit: 250,
+    },
+  };
 
   const { isPending, error, data, isLoading } = useQuery({
-    queryKey: ['symbol', 'UseGetData', symbol, JSON.stringify(options), JSON.stringify(toolsEnabled)],
-    queryFn: () =>
-      fetch(`http://localhost:3001/api/symbol/${symbol}/${dataType}?${queryString.stringify(queryToSet)}`).then((res) =>
-        res.json(),
-      ),
-  })
+    queryKey: ["symbol", "UseGetData", symbol, JSON.stringify(options)],
+    queryFn: () => fetch(`http://localhost:3001/api/data/symbol/${symbol}/${dataType}?${queryString.stringify(queryToSet)}`).then((res) => res.json()),
+  });
 
   return {
-    SymbolDataIsPending: isPending, 
-    SymbolDataHasError: error, 
-    SymbolDataResponse: data, 
-    SymbolDataIsLoading: isLoading 
-   }
+    isPending,
+    error,
+    data,
+    isLoading,
+  };
+};
 
-}
-
-export default UseGetSymbolData
+export default UseGetSymbolData;

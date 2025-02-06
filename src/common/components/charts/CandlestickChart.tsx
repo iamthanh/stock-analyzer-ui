@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useMemo } from "react";
 import ReactECharts from "echarts-for-react";
 import { SymbolDailyDataType } from "../../../types/symbolData.types";
 import { TrendDetectionDataType } from "../../../types/trendDetection.types";
@@ -48,79 +48,84 @@ const CandlestickChart: FC<CandlestickChartProps> = ({ symbol, dateKeys, symbolD
     }
   }
 
-  return (
-    <ReactECharts
-      style={{ height: "100vh" }}
-      option={{
-        tooltip: {
-          trigger: "axis",
-          axisPointer: {
-            type: "cross",
-          },
-        },
-        legend: {
-          show: false,
-          data: [symbol],
-        },
-        grid: {
-          left: "5%",
-          right: "5%",
-          bottom: "15%",
-        },
-        xAxis: {
-          type: "category",
-          data: dateKeys,
-          scale: true,
-          boundaryGap: false,
-          axisLine: {
-            onZero: false,
-          },
-          splitLine: {
-            show: false,
-          },
-          splitNumber: 20,
-          min: "dataMin",
-          max: "dataMax",
-        },
-        yAxis: {
-          scale: true,
-        },
-        dataZoom: [
-          {
-            type: "inside",
-            start: 50,
-            end: 100,
-          },
-          {
-            show: false,
-            type: "slider",
-            top: "90%",
-            start: 50,
-            end: 100,
-          },
-        ],
-        series: [
-          {
-            name: symbol,
-            type: "candlestick",
-            data: chartData,
-            itemStyle: {
-              color: "#0ead69",
-              color0: "#ee4266",
-              borderColor: null,
-              borderColor0: null,
+  const renderChart = useMemo(
+    () => (
+      <ReactECharts
+        style={{ height: "100vh" }}
+        option={{
+          tooltip: {
+            trigger: "axis",
+            axisPointer: {
+              type: "cross",
             },
-            markArea: {
+          },
+          legend: {
+            show: false,
+            data: [symbol],
+          },
+          grid: {
+            left: "5%",
+            right: "5%",
+            bottom: "15%",
+          },
+          xAxis: {
+            type: "category",
+            data: dateKeys,
+            scale: true,
+            boundaryGap: false,
+            axisLine: {
+              onZero: false,
+            },
+            splitLine: {
+              show: false,
+            },
+            splitNumber: 20,
+            min: "dataMin",
+            max: "dataMax",
+          },
+          yAxis: {
+            scale: true,
+          },
+          dataZoom: [
+            {
+              type: "inside",
+              start: 50,
+              end: 100,
+            },
+            {
+              show: false,
+              type: "slider",
+              top: "90%",
+              start: 50,
+              end: 100,
+            },
+          ],
+          series: [
+            {
+              name: symbol,
+              type: "candlestick",
+              data: chartData,
               itemStyle: {
-                color: "rgba(136,231,136,0.3)",
+                color: "#0ead69",
+                color0: "#ee4266",
+                borderColor: null,
+                borderColor0: null,
               },
-              data: highlightMarkAreas,
+              markArea: {
+                itemStyle: {
+                  color: "rgba(136,231,136,0.3)",
+                },
+                data: highlightMarkAreas,
+              },
             },
-          },
-        ],
-      }}
-    />
+          ],
+        }}
+      />
+    ),
+    [highlightMarkAreas, chartData]
   );
+
+  return renderChart;
 };
 
 export default CandlestickChart;
