@@ -20,10 +20,6 @@ export const ExplorerPage = () => {
 
   const renderChartWrapper = useMemo(() => <ChartWrapper symbol={symbol} dataType={"daily"} options={{}} toolsEnabled={toolsEnabled} />, [symbol, toolsEnabled]);
 
-  useEffect(() => {
-    console.log(symbolSelectorModalOpen);
-  }, [symbolSelectorModalOpen]);
-
   return (
     <>
       <Box component="section" sx={{ bgcolor: "#000000", p: 2, borderBottom: "1px solid grey" }}>
