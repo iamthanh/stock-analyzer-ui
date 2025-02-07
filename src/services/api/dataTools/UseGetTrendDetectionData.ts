@@ -10,7 +10,7 @@ type UseGetSymbolDataProps = {
 const UseGetTrendDetectionData = ({ enabled, symbol, settings = null }: UseGetSymbolDataProps) => {
   const { isPending, error, data, isLoading } = useQuery({
     queryKey: ["dataTools", "UseGetTrendDetectionData", symbol, JSON.stringify(settings)],
-    queryFn: () => fetch(`http://localhost:3001/api/data-tools/trend-detection/${symbol}`).then((res) => res.json()),
+    queryFn: () => fetch(`http://localhost:3001/api/data-tools/trend-detection/${symbol}?${queryString.stringify(settings)}`).then((res) => res.json()),
     enabled: enabled,
   });
 

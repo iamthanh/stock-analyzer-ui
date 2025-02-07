@@ -7,6 +7,7 @@ import QueryStatsIcon from "@mui/icons-material/QueryStats";
 import DataObjectIcon from "@mui/icons-material/DataObject";
 import { DataQueryOptionsType, ToolTypes } from "../../../types/explorer.types";
 import { DataToolsModal } from "./components/modals/DataToolsModal";
+import { SymbolSelectorModal } from "./components/modals/SymbolSelectorModal";
 
 export const ExplorerPage = () => {
   const [symbol, setSymbol] = useState<string>("A");
@@ -15,14 +16,19 @@ export const ExplorerPage = () => {
   const [toolsEnabled, setToolsEnabled] = useState<Partial<ToolTypes>>({});
 
   const [dataToolsModalOpen, setDataToolsModalOpen] = useState<boolean>(false);
+  const [symbolSelectorModalOpen, setSymbolSelectorModalOpen] = useState<boolean>(false);
 
   const renderChartWrapper = useMemo(() => <ChartWrapper symbol={symbol} dataType={"daily"} options={{}} toolsEnabled={toolsEnabled} />, [symbol, toolsEnabled]);
+
+  useEffect(() => {
+    console.log(symbolSelectorModalOpen);
+  }, [symbolSelectorModalOpen]);
 
   return (
     <>
       <Box component="section" sx={{ bgcolor: "#000000", p: 2, borderBottom: "1px solid grey" }}>
         <Stack spacing={2} direction="row">
-          <Button variant="outlined" startIcon={<QueryStatsIcon />}>
+          <Button variant="outlined" startIcon={<QueryStatsIcon />} onClick={() => setSymbolSelectorModalOpen(true)}>
             Symbol: {symbol}
           </Button>
           <Button variant="outlined" startIcon={<DataObjectIcon />}>
@@ -34,7 +40,9 @@ export const ExplorerPage = () => {
         </Stack>
       </Box>
       {renderChartWrapper}
-      <DataToolsModal open={dataToolsModalOpen} setOpen={setDataToolsModalOpen} toolsEnabled={toolsEnabled} setToolsEnabled={setToolsEnabled} />
+
+      {dataToolsModalOpen && <DataToolsModal open={dataToolsModalOpen} setOpen={setDataToolsModalOpen} toolsEnabled={toolsEnabled} setToolsEnabled={setToolsEnabled} />}
+      {symbolSelectorModalOpen && <SymbolSelectorModal open={symbolSelectorModalOpen} setOpen={setSymbolSelectorModalOpen} setSymbol={setSymbol} />}
     </>
   );
 };

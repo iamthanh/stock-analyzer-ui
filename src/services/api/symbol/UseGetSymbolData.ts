@@ -16,7 +16,7 @@ const UseGetSymbolData = ({ symbol, dataType, options = {} }: UseGetSymbolDataPr
   };
 
   const { isPending, error, data, isLoading } = useQuery({
-    queryKey: ["symbol", "UseGetData", symbol, JSON.stringify(options)],
+    queryKey: ["symbol", "UseGetSymbolData", symbol, JSON.stringify(options)],
     queryFn: () => fetch(`http://localhost:3001/api/data/symbol/${symbol}/${dataType}?${queryString.stringify(queryToSet)}`).then((res) => res.json()),
   });
 

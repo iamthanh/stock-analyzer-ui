@@ -1,9 +1,6 @@
-import { useQuery } from "@tanstack/react-query";
-import queryString from "query-string";
 import { ExplorerToolsEnum } from "../../../types/explorer.types";
 import UseGetTrendDetectionData from "./UseGetTrendDetectionData";
 import { useCallback, useEffect, useState } from "react";
-import { clone, set, unset } from "lodash";
 
 type UseDataToolsDataProps = {
   symbol: string;
@@ -27,7 +24,7 @@ const UseDataToolsData = ({ symbol, toolsEnabled }: UseDataToolsDataProps) => {
   useEffect(() => {
     if (toolsEnabled) {
       for (let tool of Object.keys(responseData)) {
-        if (!isToolEnabled(tool)) { 
+        if (!isToolEnabled(tool)) {
           let removed = { ...responseData };
           delete removed[tool];
           setResponseData(removed);

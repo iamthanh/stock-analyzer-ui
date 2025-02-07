@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
-import UseGetSymbolData from "../../../services/api/symbol/useGetSymbolData";
+import UseGetSymbolData from "../../../services/api/symbol/UseGetSymbolData";
 import { Alert } from "@mui/material";
 import CandlestickChart from "./CandlestickChart";
 import { ExplorerToolsEnum, ToolTypes } from "../../../types/explorer.types";

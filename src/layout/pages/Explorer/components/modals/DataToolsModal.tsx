@@ -7,7 +7,7 @@ import { ExplorerToolsEnum, ToolTypes } from "../../../../../types/explorer.type
 import { TrendDetectionDataTool } from "../dataTools/TrendDetection";
 import Grid from "@mui/material/Grid2";
 import CloseIcon from "@mui/icons-material/Close";
-import { Dispatch, SetStateAction, useCallback, useMemo, useState } from "react";
+import { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState } from "react";
 import clone from "lodash/clone";
 import unset from "lodash/unset";
 
@@ -24,6 +24,10 @@ export const DataToolsModal = ({ toolsEnabled, setToolsEnabled, open, setOpen }:
   const isToolEnabled = useCallback((key: string) => key in (editingToolsEnabled || {}), [editingToolsEnabled]);
 
   const saveChangesHandler = () => setToolsEnabled(editingToolsEnabled);
+
+  useEffect(() => {
+    console.log(toolsEnabled);
+  }, [toolsEnabled]);
 
   const renderTools = useMemo(
     () => (
