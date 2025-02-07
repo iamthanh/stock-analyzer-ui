@@ -14,6 +14,8 @@ type CandlestickChartDataType = Array<number | string>;
 
 const CandlestickChart: FC<CandlestickChartProps> = ({ symbol, dateKeys, symbolData, symbolToolsData }) => {
   let chartData;
+  let volumes;
+
   let highlightMarkAreas: Array<Array<{ xAxis: string }>> = [];
 
   const transformTrendDetectionIntoChartMarkAreas = (trendData: TrendDetectionDataType[]) => {
@@ -24,7 +26,18 @@ const CandlestickChart: FC<CandlestickChartProps> = ({ symbol, dateKeys, symbolD
     try {
       // Make sure that the dateKeys are sorted, oldest first
       const dates = dateKeys.sort((a, b) => a.localeCompare(b, "en", { ignorePunctuation: true }));
-      return dates.map((date: string) => [symbolData[date].open, symbolData[date].close, symbolData[date].low, symbolData[date].high, symbolData[date].volume]);
+      return dates.map((date: string) => [symbolData[date].open, symbolData[date].close, symbolData[date].low, symbolData[date].high]);
+    } catch (err) {
+      console.log(err);
+      console.error("there was an error trying to transform data");
+    }
+  };
+
+  const transformVolumeForChart = () => {
+    try {
+      // Make sure that the dateKeys are sorted, oldest first
+      const dates = dateKeys.sort((a, b) => a.localeCompare(b, "en", { ignorePunctuation: true }));
+      return dates.map((date: string) => symbolData[date].volume);
     } catch (err) {
       console.log(err);
       console.error("there was an error trying to transform data");
@@ -35,6 +48,7 @@ const CandlestickChart: FC<CandlestickChartProps> = ({ symbol, dateKeys, symbolD
     const transformedData = transformDataForChart();
     if (transformedData) {
       chartData = transformedData;
+      volumes = transformVolumeForChart();
     }
 
     if (symbolToolsData) {
@@ -59,33 +73,82 @@ const CandlestickChart: FC<CandlestickChartProps> = ({ symbol, dateKeys, symbolD
               type: "cross",
             },
           },
+          axisPointer: {
+            link: [
+              {
+                xAxisIndex: "all",
+              },
+            ],
+            label: {
+              backgroundColor: "#777",
+            },
+          },
           legend: {
             show: false,
             data: [symbol],
           },
-          grid: {
-            left: "5%",
-            right: "5%",
-            bottom: "15%",
-          },
-          xAxis: {
-            type: "category",
-            data: dateKeys,
-            scale: true,
-            boundaryGap: false,
-            axisLine: {
-              onZero: false,
+          grid: [
+            {
+              left: "5%",
+              right: "5%",
+              height: "65%",
             },
-            splitLine: {
-              show: false,
+            {
+              left: "5%",
+              right: "5%",
+              top: "63%",
+              height: "16%",
             },
-            splitNumber: 20,
-            min: "dataMin",
-            max: "dataMax",
-          },
-          yAxis: {
-            scale: true,
-          },
+          ],
+          xAxis: [
+            {
+              type: "category",
+              data: dateKeys,
+              scale: true,
+              gridIndex: 0,
+              boundaryGap: false,
+              splitLine: { show: false },
+              axisLine: { show: false },
+              axisTick: { show: false },
+              axisLabel: { show: false },
+              // axisLine: {
+              //   onZero: false,
+              // },
+              // splitLine: {
+              //   show: false,
+              // },
+              splitNumber: 20,
+              min: "dataMin",
+              max: "dataMax",
+            },
+            {
+              type: "category",
+              gridIndex: 1,
+              data: dateKeys,
+              boundaryGap: false,
+              axisLine: { onZero: false },
+              axisTick: { show: false },
+              splitLine: { show: false },
+              axisLabel: { show: false },
+              min: "dataMin",
+              max: "dataMax",
+            },
+          ],
+          yAxis: [
+            {
+              scale: true,
+              gridIndex: 0,
+            },
+            {
+              scale: true,
+              gridIndex: 1,
+              splitNumber: 2,
+              axisLabel: { show: false },
+              axisLine: { show: false },
+              axisTick: { show: false },
+              splitLine: { show: false },
+            },
+          ],
           dataZoom: [
             {
               type: "inside",
@@ -93,9 +156,10 @@ const CandlestickChart: FC<CandlestickChartProps> = ({ symbol, dateKeys, symbolD
               end: 100,
             },
             {
-              show: false,
-              type: "slider",
-              top: "90%",
+              show: true,
+              xAxisIndex: [0, 1],
+              type: "inside",
+              top: "85%",
               start: 50,
               end: 100,
             },
@@ -118,11 +182,18 @@ const CandlestickChart: FC<CandlestickChartProps> = ({ symbol, dateKeys, symbolD
                 data: highlightMarkAreas,
               },
             },
+            {
+              name: "Volume",
+              type: "bar",
+              data: volumes,
+              xAxisIndex: 1,
+              yAxisIndex: 1,
+            },
           ],
         }}
       />
     ),
-    [highlightMarkAreas, chartData]
+    [highlightMarkAreas, chartData, volumes]
   );
 
   return renderChart;

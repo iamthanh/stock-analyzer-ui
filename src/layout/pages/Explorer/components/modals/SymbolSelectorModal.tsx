@@ -1,7 +1,7 @@
-import { Box, CircularProgress, Dialog, DialogContent, DialogTitle, IconButton, List, ListItem, ListItemButton, ListItemText, Pagination, TextField } from "@mui/material";
+import { Box, CircularProgress, Dialog, DialogContent, DialogTitle, IconButton, ListItem, ListItemButton, ListItemText, TextField } from "@mui/material";
 import { FixedSizeList, ListChildComponentProps } from "react-window";
 import CloseIcon from "@mui/icons-material/Close";
-import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
+import { Dispatch, SetStateAction, useMemo, useState } from "react";
 import UseGetSymboList from "../../../../../services/api/symbol/UseGetSymboList";
 import { TickerType } from "../../../../../types/tickers.types";
 
@@ -12,7 +12,7 @@ type DataToolsModalProps = {
 };
 
 export const SymbolSelectorModal = ({ open, setOpen, setSymbol }: DataToolsModalProps) => {
-  const { isPending, error, data: symbolsListData, isLoading } = UseGetSymboList({});
+  const { isPending, data: symbolsListData } = UseGetSymboList({});
   const [searchTerm, setSearchTerm] = useState<string>("");
 
   const getFilteredDataSet = useMemo(() => {

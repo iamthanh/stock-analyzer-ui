@@ -7,20 +7,18 @@ import { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState } f
 import clone from "lodash/clone";
 import unset from "lodash/unset";
 
-type DataToolsModalProps = {
-  toolsEnabled: Partial<ToolTypes>;
-  setToolsEnabled: Dispatch<SetStateAction<Partial<ToolTypes>>>;
-  open: boolean;
-  setOpen: (args: boolean) => void;
-};
+type DataTypesSelectorProps = {};
 
-export const DataToolsModal = ({ toolsEnabled, setToolsEnabled, open, setOpen }: DataToolsModalProps) => {
-  const [editingToolsEnabled, setEditingToolsEnabled] = useState<Partial<ToolTypes>>(toolsEnabled);
+export const DataTypesSelector = ({}: DataTypesSelectorProps) => {
+  const [editingDataTypes, setEditingDataTypes] = useState<any>([
+    {
+      type: "daily",
+      seriesType: "close",
+      displayType: "candlestick",
+    },
+  ]);
 
-  const isToolEnabled = useCallback((key: string) => key in (editingToolsEnabled || {}), [editingToolsEnabled]);
-  const saveChangesHandler = () => setToolsEnabled(editingToolsEnabled);
-
-  const renderTools = useMemo(
+  const renderDataTypesContent = useMemo(
     () => (
       <Grid container spacing={2}>
         <Grid size={1}>
@@ -63,14 +61,14 @@ export const DataToolsModal = ({ toolsEnabled, setToolsEnabled, open, setOpen }:
       >
         <CloseIcon />
       </IconButton>
-      <DialogContent dividers>{renderTools}</DialogContent>
+      <DialogContent dividers>{renderDataTypesContent}</DialogContent>
 
       <DialogActions>
         <Button
           autoFocus
           onClick={() => {
-            saveChangesHandler();
-            setOpen(false);
+            // saveChangesHandler();
+            // setOpen(false);
           }}
         >
           Save changes
