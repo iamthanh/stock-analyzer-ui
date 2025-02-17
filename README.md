@@ -2,6 +2,8 @@
 
 This repo covers the UI and frontend system for the stock analyzer tool. This allows users to navigate all of exploration, reports, and customizable tool that are available for analyzing the stock market.
 
+Built using react/typescript/vite/echarts/mui
+
 ### Explorer
 
 A really simple basic UI for seeing the individual stocks performance over time. Includes tools such as trend detection that will highlight time ranges where upward trends were found.
