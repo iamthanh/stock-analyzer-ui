@@ -1,10 +1,9 @@
 import { type Navigation } from "@toolpad/core/AppProvider";
 
 import TravelExploreIcon from "@mui/icons-material/TravelExplore";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import BarChartIcon from "@mui/icons-material/BarChart";
-import DescriptionIcon from "@mui/icons-material/Description";
-import LayersIcon from "@mui/icons-material/Layers";
+import InsertChartIcon from "@mui/icons-material/InsertChart";
+import SettingsIcon from "@mui/icons-material/Settings";
 
 const navigation: Navigation = [
   {
@@ -13,38 +12,33 @@ const navigation: Navigation = [
     icon: <TravelExploreIcon />,
   },
   {
-    segment: "orders",
-    title: "Orders",
-    icon: <ShoppingCartIcon />,
+    segment: "reports",
+    title: "Reports",
+    icon: <InsertChartIcon />,
   },
   {
     kind: "divider",
   },
   {
     kind: "header",
-    title: "Analytics",
+    title: "Analytics tools",
   },
   {
-    segment: "reports",
-    title: "Reports",
+    segment: "tools",
+    title: "Tools",
     icon: <BarChartIcon />,
-    children: [
-      {
-        segment: "sales",
-        title: "Sales",
-        icon: <DescriptionIcon />,
-      },
-      {
-        segment: "traffic",
-        title: "Traffic",
-        icon: <DescriptionIcon />,
-      },
-    ],
   },
   {
-    segment: "integrations",
-    title: "Integrations",
-    icon: <LayersIcon />,
+    kind: "divider",
+  },
+  {
+    kind: "header",
+    title: "Account",
+  },
+  {
+    segment: "settings",
+    title: "Settings",
+    icon: <SettingsIcon />,
   },
 ];
 

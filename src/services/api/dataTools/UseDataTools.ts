@@ -19,7 +19,7 @@ const UseDataToolsData = ({ symbol, toolsEnabled }: UseDataToolsDataProps) => {
     isPending: TrendDetectionIsPending,
     error: TrendDetectionHasError,
     data: TrendDetectionDataResponse,
-  } = UseGetTrendDetectionData({ enabled: isToolEnabled(ExplorerToolsEnum.trendDetection), symbol, settings: toolsEnabled[ExplorerToolsEnum.trendDetection] });
+  } = UseGetTrendDetectionData({ enabled: isToolEnabled(ExplorerToolsEnum.trendDetection), symbol, settings: { ...toolsEnabled[ExplorerToolsEnum.trendDetection], limit: 200 } });
 
   useEffect(() => {
     if (toolsEnabled) {

@@ -11,7 +11,7 @@ const UseGetSymbolData = ({ symbol, dataType, options = {} }: UseGetSymbolDataPr
   const queryToSet = {
     ...options,
     ...{
-      limit: 250,
+      limit: 500,
     },
   };
 
